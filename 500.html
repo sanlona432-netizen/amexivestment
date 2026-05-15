@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error — AmexIvestment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #0a1628 0%, #0f4c81 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; }
+        .error-container { max-width: 500px; }
+        .error-code { font-family: 'Playfair Display', serif; font-size: 120px; font-weight: 700; color: #ef4444; line-height: 1; margin-bottom: 20px; }
+        .error-title { font-size: 28px; font-weight: 700; margin-bottom: 15px; }
+        .error-text { color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 30px; }
+        .btn { padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #00a896, #00d4b8); color: #0a1628; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,168,150,0.4); }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code">500</div>
+        <h1 class="error-title">Server Error</h1>
+        <p class="error-text">Something went wrong on our end. We're working to fix it. Please try again in a few moments.</p>
+        <a href="{{ url_for('index') }}" class="btn"><i class="fas fa-redo"></i> Try Again</a>
+    </div>
+</body>
+</html>

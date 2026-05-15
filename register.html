@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — AmexIvestment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81; --primary-dark: #0a3560; --primary-light: #1a6bb8;
+            --accent: #00a896; --accent-light: #00d4b8; --gold: #c9a227;
+            --dark: #0a1628; --text: #1e293b; --text-light: #64748b;
+            --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --success: #10b981; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+
+        .register-container { display: grid; grid-template-columns: 1fr 1.2fr; max-width: 1100px; width: 100%; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 50px 100px rgba(0,0,0,0.4); }
+        .register-sidebar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 60px 40px; color: white; display: flex; flex-direction: column; justify-content: center; }
+        .register-sidebar .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; text-decoration: none; }
+        .register-sidebar .logo-icon { width: 45px; height: 45px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+        .register-sidebar .logo-text { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: white; }
+        .register-sidebar h2 { font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 20px; }
+        .register-sidebar p { color: rgba(255,255,255,0.8); line-height: 1.7; margin-bottom: 30px; }
+        .benefit-list { list-style: none; }
+        .benefit-list li { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; color: rgba(255,255,255,0.9); }
+        .benefit-list li i { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+        .register-form { padding: 50px 50px; overflow-y: auto; max-height: 90vh; }
+        .register-form h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--dark); margin-bottom: 10px; }
+        .register-form .subtitle { color: var(--text-light); margin-bottom: 30px; font-size: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+        .form-group label .required { color: var(--danger); }
+        .form-group input, .form-group select { width: 100%; padding: 14px 16px; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 15px; font-family: 'Inter', sans-serif; transition: all 0.3s; background: var(--gray-50); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .password-strength { height: 4px; background: var(--gray-200); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+        .password-strength-bar { height: 100%; width: 0; transition: all 0.3s; border-radius: 2px; }
+        .strength-weak { background: var(--danger); width: 33%; }
+        .strength-medium { background: var(--warning); width: 66%; }
+        .strength-strong { background: var(--success); width: 100%; }
+        .terms-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 25px; }
+        .terms-check input { width: auto; margin-top: 3px; }
+        .terms-check label { font-size: 14px; color: var(--text-light); line-height: 1.5; }
+        .terms-check a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .btn { padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.3); width: 100%; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(15, 76, 129, 0.4); }
+        .divider { display: flex; align-items: center; gap: 15px; margin: 25px 0; color: var(--text-light); font-size: 14px; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+        .social-login { display: flex; gap: 10px; }
+        .social-btn { flex: 1; padding: 12px; border: 2px solid var(--gray-200); border-radius: 10px; background: white; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
+        .social-btn:hover { border-color: var(--primary); background: var(--gray-50); }
+        .login-link { text-align: center; margin-top: 25px; color: var(--text-light); font-size: 15px; }
+        .login-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .register-container { grid-template-columns: 1fr; }
+            .register-sidebar { display: none; }
+            .register-form { padding: 30px; }
+        }
+        @media (max-width: 500px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-sidebar">
+            <a href="{{ url_for('index') }}" class="logo">
+                <div class="logo-icon"><i class="fas fa-landmark"></i></div>
+                <div class="logo-text">AmexIvestment</div>
+            </a>
+            <h2>Join 50,000+ Americans</h2>
+            <p>Create your free account and get pre-approved for a loan in just 2 minutes. No credit impact.</p>
+            <ul class="benefit-list">
+                <li><i class="fas fa-check"></i> Instant rate check</li>
+                <li><i class="fas fa-check"></i> No hidden fees ever</li>
+                <li><i class="fas fa-check"></i> Bank-level security</li>
+                <li><i class="fas fa-check"></i> 24/7 customer support</li>
+                <li><i class="fas fa-check"></i> Funds next business day</li>
+            </ul>
+        </div>
+        <div class="register-form">
+            <h1>Create Your Account</h1>
+            <p class="subtitle">Get pre-approved in 2 minutes — no credit impact</p>
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name <span class="required">*</span></label>
+                        <input type="text" name="first_name" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name <span class="required">*</span></label>
+                        <input type="text" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address <span class="required">*</span></label>
+                    <input type="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number <span class="required">*</span></label>
+                    <input type="tel" name="phone" placeholder="(555) 123-4567" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth <span class="required">*</span></label>
+                        <input type="date" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Annual Income <span class="required">*</span></label>
+                        <input type="text" name="income" placeholder="$75,000" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Loan Purpose</label>
+                    <select name="purpose">
+                        <option value="">Select purpose...</option>
+                        <option>Debt Consolidation</option>
+                        <option>Home Improvement</option>
+                        <option>Auto Purchase</option>
+                        <option>Education</option>
+                        <option>Medical Expenses</option>
+                        <option>Business</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Password <span class="required">*</span></label>
+                    <input type="password" name="password" id="password" placeholder="Min. 8 characters" required minlength="8" oninput="checkStrength(this.value)">
+                    <div class="password-strength"><div class="password-strength-bar" id="strengthBar"></div></div>
+                </div>
+
+                <div class="terms-check">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. I consent to AmexIvestment checking my credit profile and contacting me about loan offers.</label>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                    <small style="color: var(--text-light); display: block; margin-top: 8px;">
+                        <i class="fas fa-shield-alt"></i> Protected by Google reCAPTCHA
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Create Account & Check Rate</button>
+            </form>
+
+            <div class="divider">or sign up with</div>
+            <div class="social-login">
+                <button class="social-btn"><i class="fab fa-google" style="color: #DB4437;"></i> Google</button>
+                <button class="social-btn"><i class="fab fa-apple" style="color: #000;"></i> Apple</button>
+            </div>
+
+            <div class="login-link">
+                Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkStrength(password) {
+            const bar = document.getElementById('strengthBar');
+            bar.className = 'password-strength-bar';
+            if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+                bar.classList.add('strength-strong');
+            } else if (password.length >= 6 && (/[A-Z]/.test(password) || /[0-9]/.test(password))) {
+                bar.classList.add('strength-medium');
+            } else if (password.length > 0) {
+                bar.classList.add('strength-weak');
+            }
+        }
+    </script>
+</body>
+</html>

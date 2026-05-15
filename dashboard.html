@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — AmexIvestment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81; --primary-dark: #0a3560; --primary-light: #1a6bb8;
+            --accent: #00a896; --accent-light: #00d4b8; --gold: #c9a227;
+            --dark: #0a1628; --text: #1e293b; --text-light: #64748b;
+            --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-50); }
+
+        /* Sidebar */
+        .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--dark); padding: 30px 0; position: fixed; width: 260px; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 0 25px 30px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-logo .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .sidebar-logo .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; }
+        .sidebar-logo .logo-text span { color: var(--accent-light); }
+        .nav-section { padding: 0 15px; margin-bottom: 25px; }
+        .nav-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); padding: 0 10px; margin-bottom: 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s; margin-bottom: 4px; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-item i { width: 24px; text-align: center; font-size: 16px; }
+        .nav-item .badge { margin-left: auto; background: var(--accent); color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .user-profile { padding: 20px 25px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
+        .user-details h4 { color: white; font-size: 14px; font-weight: 600; }
+        .user-details p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+        /* Main Content */
+        .main-content { margin-left: 260px; padding: 30px 40px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--dark); }
+        .header-actions { display: flex; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(15, 76, 129, 0.3); }
+        .btn-outline { background: white; border: 2px solid var(--gray-200); color: var(--text); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 16px; padding: 25px; border: 1px solid var(--gray-200); transition: all 0.3s; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .stat-header span { font-size: 13px; color: var(--text-light); font-weight: 500; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .stat-icon.blue { background: rgba(15, 76, 129, 0.1); color: var(--primary); }
+        .stat-icon.green { background: rgba(0, 168, 150, 0.1); color: var(--accent); }
+        .stat-icon.gold { background: rgba(201, 162, 39, 0.1); color: var(--gold); }
+        .stat-icon.purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--dark); margin-bottom: 5px; }
+        .stat-change { font-size: 13px; color: var(--success); font-weight: 500; }
+        .stat-change.negative { color: var(--danger); }
+
+        /* Content Cards */
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        .card { background: white; border-radius: 16px; border: 1px solid var(--gray-200); overflow: hidden; }
+        .card-header { padding: 25px 25px 0; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-header h3 { font-size: 18px; font-weight: 700; color: var(--dark); }
+        .card-header a { font-size: 13px; color: var(--primary); text-decoration: none; font-weight: 600; }
+        .card-body { padding: 0 25px 25px; }
+
+        /* Loan Table */
+        .loan-table { width: 100%; border-collapse: collapse; }
+        .loan-table th { text-align: left; padding: 12px 15px; font-size: 12px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--gray-100); }
+        .loan-table td { padding: 16px 15px; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
+        .loan-table tr:hover { background: var(--gray-50); }
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-approved { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+        .status-pending { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+        .status-funded { background: rgba(15, 76, 129, 0.12); color: var(--primary); }
+        .status-rejected { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+        .loan-type-icon { width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 14px; }
+
+        /* Activity Feed */
+        .activity-item { display: flex; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--gray-100); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .activity-icon.success { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .activity-icon.info { background: rgba(15, 76, 129, 0.15); color: var(--primary); }
+        .activity-icon.warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .activity-content h4 { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 3px; }
+        .activity-content p { font-size: 13px; color: var(--text-light); }
+        .activity-time { font-size: 12px; color: var(--text-light); margin-left: auto; white-space: nowrap; }
+
+        /* Quick Actions */
+        .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .quick-action { background: white; border: 2px solid var(--gray-200); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; text-decoration: none; color: inherit; }
+        .quick-action:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .quick-action i { font-size: 24px; color: var(--primary); margin-bottom: 10px; display: block; }
+        .quick-action span { font-size: 14px; font-weight: 600; color: var(--dark); }
+
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="{{ url_for('index') }}" class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-landmark"></i></div>
+                <div class="logo-text">Amex<span>Ivestment</span></div>
+            </a>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="{{ url_for('apply') }}" class="nav-item"><i class="fas fa-plus-circle"></i> Apply for Loan</a>
+                <a href="#" class="nav-item"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="#" class="nav-item"><i class="fas fa-calendar-alt"></i> Payment Schedule</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="{{ url_for('profile') }}" class="nav-item"><i class="fas fa-user"></i> Profile</a>
+                <a href="#" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" class="nav-item"><i class="fas fa-bell"></i> Notifications <span class="badge">3</span></a>
+                <a href="{{ url_for('logout') }}" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-avatar">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</div>
+                    <div class="user-details">
+                        <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                        <p>{{ current_user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Welcome back, {{ current_user.first_name }} 👋</h1>
+                <div class="header-actions">
+                    <a href="{{ url_for('apply') }}" class="btn btn-primary"><i class="fas fa-plus"></i> New Loan Application</a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Total Borrowed</span>
+                        <div class="stat-icon blue"><i class="fas fa-hand-holding-usd"></i></div>
+                    </div>
+                    <div class="stat-value">${{ "{:,.0f}".format(total_borrowed) }}</div>
+                    <div class="stat-change"><i class="fas fa-arrow-up"></i> Across all loans</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Monthly Payment</span>
+                        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                    <div class="stat-value">${{ "{:,.0f}".format(monthly_payment) }}</div>
+                    <div class="stat-change"><i class="fas fa-check-circle"></i> Next due May 15</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Active Loans</span>
+                        <div class="stat-icon gold"><i class="fas fa-file-contract"></i></div>
+                    </div>
+                    <div class="stat-value">{{ active_loans_count }}</div>
+                    <div class="stat-change"><i class="fas fa-chart-line"></i> On track</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Credit Score</span>
+                        <div class="stat-icon purple"><i class="fas fa-star"></i></div>
+                    </div>
+                    <div class="stat-value">742</div>
+                    <div class="stat-change"><i class="fas fa-arrow-up"></i> +12 this month</div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+                <!-- Loan History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history" style="color: var(--primary); margin-right: 10px;"></i>Your Loans</h3>
+                        <a href="{{ url_for('apply') }}">+ Apply New</a>
+                    </div>
+                    <div class="card-body">
+                        {% if loans %}
+                        <table class="loan-table">
+                            <thead>
+                                <tr>
+                                    <th>Loan Type</th>
+                                    <th>Amount</th>
+                                    <th>Rate</th>
+                                    <th>Term</th>
+                                    <th>Monthly</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in loans %}
+                                <tr>
+                                    <td>
+                                        <span class="loan-type-icon" style="background: rgba(15, 76, 129, 0.1); color: var(--primary);">
+                                            <i class="fas fa-{{ 'user' if loan.loan_type == 'Personal' else 'car' if loan.loan_type == 'Auto' else 'home' if loan.loan_type == 'Home Equity' else 'graduation-cap' }}"></i>
+                                        </span>
+                                        {{ loan.loan_type }} Loan
+                                    </td>
+                                    <td><strong>${{ "{:,.0f}".format(loan.amount) }}</strong></td>
+                                    <td>{{ loan.interest_rate }}%</td>
+                                    <td>{{ loan.term_months }} mo</td>
+                                    <td>${{ "{:,.0f}".format(loan.monthly_payment) }}</td>
+                                    <td>
+                                        <span class="status-badge status-{{ loan.status }}">
+                                            {{ loan.status.title() }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div style="text-align: center; padding: 40px;">
+                            <i class="fas fa-file-alt" style="font-size: 48px; color: var(--gray-200); margin-bottom: 15px;"></i>
+                            <h4 style="color: var(--dark); margin-bottom: 10px;">No loans yet</h4>
+                            <p style="color: var(--text-light); margin-bottom: 20px;">Apply for your first loan and get pre-approved in minutes.</p>
+                            <a href="{{ url_for('apply') }}" class="btn btn-primary">Apply Now</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Recent Activity -->
+                    <div class="card" style="margin-bottom: 25px;">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bell" style="color: var(--primary); margin-right: 10px;"></i>Recent Activity</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="activity-item">
+                                <div class="activity-icon success"><i class="fas fa-check"></i></div>
+                                <div class="activity-content">
+                                    <h4>Loan Approved</h4>
+                                    <p>Your personal loan was approved</p>
+                                </div>
+                                <div class="activity-time">2h ago</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon info"><i class="fas fa-upload"></i></div>
+                                <div class="activity-content">
+                                    <h4>Document Uploaded</h4>
+                                    <p>Pay stub verified successfully</p>
+                                </div>
+                                <div class="activity-time">1d ago</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning"><i class="fas fa-clock"></i></div>
+                                <div class="activity-content">
+                                    <h4>Payment Due Soon</h4>
+                                    <p>$772 due on May 15, 2026</p>
+                                </div>
+                                <div class="activity-time">2d ago</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt" style="color: var(--primary); margin-right: 10px;"></i>Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-actions">
+                                <a href="{{ url_for('apply') }}" class="quick-action">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>New Loan</span>
+                                </a>
+                                <a href="{{ url_for('profile') }}" class="quick-action">
+                                    <i class="fas fa-user-edit"></i>
+                                    <span>Edit Profile</span>
+                                </a>
+                                <a href="#" class="quick-action">
+                                    <i class="fas fa-file-upload"></i>
+                                    <span>Upload Doc</span>
+                                </a>
+                                <a href="#" class="quick-action">
+                                    <i class="fas fa-headset"></i>
+                                    <span>Support</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

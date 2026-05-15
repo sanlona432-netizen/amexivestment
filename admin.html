@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — AmexIvestment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81; --primary-dark: #0a3560; --primary-light: #1a6bb8;
+            --accent: #00a896; --accent-light: #00d4b8; --gold: #c9a227;
+            --dark: #0a1628; --text: #1e293b; --text-light: #64748b;
+            --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-50); }
+
+        .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--dark); padding: 30px 0; position: fixed; width: 260px; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 0 25px 30px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-logo .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .sidebar-logo .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; }
+        .sidebar-logo .logo-text span { color: var(--accent-light); }
+        .nav-section { padding: 0 15px; margin-bottom: 25px; }
+        .nav-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); padding: 0 10px; margin-bottom: 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s; margin-bottom: 4px; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-item i { width: 24px; text-align: center; font-size: 16px; }
+        .nav-item .badge { margin-left: auto; background: var(--danger); color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+        .user-profile { padding: 20px 25px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--danger), #f97316); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
+        .user-details h4 { color: white; font-size: 14px; font-weight: 600; }
+        .user-details p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+        .main-content { margin-left: 260px; padding: 30px 40px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--dark); }
+        .admin-badge { background: linear-gradient(135deg, var(--danger), #f97316); color: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 16px; padding: 25px; border: 1px solid var(--gray-200); }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .stat-header span { font-size: 13px; color: var(--text-light); font-weight: 500; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .stat-icon.blue { background: rgba(15, 76, 129, 0.1); color: var(--primary); }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-icon.gold { background: rgba(201, 162, 39, 0.1); color: var(--gold); }
+        .stat-icon.red { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--dark); margin-bottom: 5px; }
+        .stat-label { font-size: 13px; color: var(--text-light); }
+
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .card { background: white; border-radius: 16px; border: 1px solid var(--gray-200); overflow: hidden; }
+        .card-header { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gray-100); }
+        .card-header h3 { font-size: 16px; font-weight: 700; color: var(--dark); }
+        .card-header .count { background: var(--primary); color: white; font-size: 12px; padding: 4px 10px; border-radius: 10px; }
+        .card-body { padding: 0; max-height: 400px; overflow-y: auto; }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { text-align: left; padding: 12px 20px; font-size: 12px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--gray-100); background: var(--gray-50); }
+        .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
+        .data-table tr:hover { background: var(--gray-50); }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .status-approved { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+        .status-pending { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+        .status-funded { background: rgba(15, 76, 129, 0.12); color: var(--primary); }
+        .status-rejected { background: rgba(239, 68, 68, 0.12); color: var(--danger); }
+
+        .action-btns { display: flex; gap: 5px; }
+        .action-btn { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; }
+        .action-approve { background: var(--success); color: white; }
+        .action-reject { background: var(--danger); color: white; }
+        .action-fund { background: var(--primary); color: white; }
+
+        .message-item { padding: 15px 20px; border-bottom: 1px solid var(--gray-100); }
+        .message-item:last-child { border-bottom: none; }
+        .message-item h4 { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
+        .message-item p { font-size: 13px; color: var(--text-light); margin-bottom: 8px; line-height: 1.5; }
+        .message-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-light); }
+        .message-meta .unread { color: var(--primary); font-weight: 600; }
+
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <a href="{{ url_for('index') }}" class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-landmark"></i></div>
+                <div class="logo-text">Amex<span>Ivestment</span></div>
+            </a>
+            <div class="nav-section">
+                <div class="nav-section-title">Admin</div>
+                <a href="{{ url_for('admin') }}" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i class="fas fa-users"></i> Users</a>
+                <a href="#" class="nav-item"><i class="fas fa-file-contract"></i> Loans <span class="badge">{{ stats.pending_loans }}</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-envelope"></i> Messages <span class="badge">{{ stats.unread_messages }}</span></a>
+                <a href="#" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-user"></i> My Account</a>
+                <a href="{{ url_for('logout') }}" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div class="user-details">
+                        <h4>Admin User</h4>
+                        <p>admin@amexivestment.com</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <span class="admin-badge"><i class="fas fa-shield-alt"></i> ADMIN ACCESS</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Total Users</span>
+                        <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+                    </div>
+                    <div class="stat-value">{{ stats.total_users }}</div>
+                    <div class="stat-label">Registered accounts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Total Loans</span>
+                        <div class="stat-icon green"><i class="fas fa-file-contract"></i></div>
+                    </div>
+                    <div class="stat-value">{{ stats.total_loans }}</div>
+                    <div class="stat-label">All applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Total Funded</span>
+                        <div class="stat-icon gold"><i class="fas fa-hand-holding-usd"></i></div>
+                    </div>
+                    <div class="stat-value">${{ "{:,.0f}".format(stats.total_funded) }}</div>
+                    <div class="stat-label">Disbursed amount</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>Pending</span>
+                        <div class="stat-icon red"><i class="fas fa-clock"></i></div>
+                    </div>
+                    <div class="stat-value">{{ stats.pending_loans }}</div>
+                    <div class="stat-label">Awaiting review</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <!-- Recent Loans -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-contract" style="color: var(--primary); margin-right: 10px;"></i>Recent Loan Applications</h3>
+                        <span class="count">{{ loans|length }}</span>
+                    </div>
+                    <div class="card-body">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Applicant</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Rate</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for loan in loans %}
+                                <tr>
+                                    <td>#{{ loan.id }}</td>
+                                    <td>{{ loan.applicant.first_name }} {{ loan.applicant.last_name }}</td>
+                                    <td>{{ loan.loan_type }}</td>
+                                    <td><strong>${{ "{:,.0f}".format(loan.amount) }}</strong></td>
+                                    <td>{{ loan.interest_rate }}%</td>
+                                    <td><span class="status-badge status-{{ loan.status }}">{{ loan.status.title() }}</span></td>
+                                    <td>
+                                        <div class="action-btns">
+                                            {% if loan.status == 'pending' %}
+                                            <a href="{{ url_for('admin_loan_action', loan_id=loan.id, action='approve') }}" class="action-btn action-approve">Approve</a>
+                                            <a href="{{ url_for('admin_loan_action', loan_id=loan.id, action='reject') }}" class="action-btn action-reject">Reject</a>
+                                            {% elif loan.status == 'approved' %}
+                                            <a href="{{ url_for('admin_loan_action', loan_id=loan.id, action='fund') }}" class="action-btn action-fund">Fund</a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Contact Messages -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-envelope" style="color: var(--primary); margin-right: 10px;"></i>Contact Messages</h3>
+                        <span class="count">{{ messages|length }}</span>
+                    </div>
+                    <div class="card-body">
+                        {% for msg in messages %}
+                        <div class="message-item">
+                            <h4>{{ msg.name }} — {{ msg.subject or 'No Subject' }}</h4>
+                            <p>{{ msg.message[:100] }}{% if msg.message|length > 100 %}...{% endif %}</p>
+                            <div class="message-meta">
+                                <span>{{ msg.email }}</span>
+                                <span class="{{ 'unread' if not msg.is_read else '' }}">{{ msg.created_at.strftime('%b %d, %Y') }} {{ '• Unread' if not msg.is_read else '' }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card" style="margin-top: 25px;">
+                <div class="card-header">
+                    <h3><i class="fas fa-users" style="color: var(--primary); margin-right: 10px;"></i>All Users</h3>
+                    <span class="count">{{ users|length }}</span>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Income</th>
+                                <th>Joined</th>
+                                <th>Loans</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>#{{ user.id }}</td>
+                                <td><strong>{{ user.first_name }} {{ user.last_name }}</strong></td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>${{ "{:,.0f}".format(user.annual_income) }}</td>
+                                <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
+                                <td>{{ user.loans|length }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — AmexIvestment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81; --primary-dark: #0a3560; --primary-light: #1a6bb8;
+            --accent: #00a896; --accent-light: #00d4b8; --gold: #c9a227;
+            --dark: #0a1628; --text: #1e293b; --text-light: #64748b;
+            --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --success: #10b981; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--gray-50); }
+
+        .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--dark); padding: 30px 0; position: fixed; width: 260px; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; padding: 0 25px 30px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-logo .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .sidebar-logo .logo-text { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: white; }
+        .sidebar-logo .logo-text span { color: var(--accent-light); }
+        .nav-section { padding: 0 15px; margin-bottom: 25px; }
+        .nav-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); padding: 0 10px; margin-bottom: 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s; margin-bottom: 4px; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .nav-item i { width: 24px; text-align: center; font-size: 16px; }
+        .user-profile { padding: 20px 25px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
+        .user-details h4 { color: white; font-size: 14px; font-weight: 600; }
+        .user-details p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+        .main-content { margin-left: 260px; padding: 30px 40px; }
+        .page-header { margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--dark); margin-bottom: 10px; }
+        .page-header p { color: var(--text-light); }
+
+        .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; max-width: 1000px; }
+        .profile-card { background: white; border-radius: 20px; padding: 35px; border: 1px solid var(--gray-200); text-align: center; }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 36px; margin: 0 auto 20px; }
+        .profile-card h3 { font-size: 22px; color: var(--dark); margin-bottom: 5px; }
+        .profile-card .email { color: var(--text-light); font-size: 14px; margin-bottom: 20px; }
+        .profile-stat { display: flex; justify-content: center; gap: 30px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--gray-100); }
+        .profile-stat div { text-align: center; }
+        .profile-stat .number { font-size: 24px; font-weight: 800; color: var(--primary); }
+        .profile-stat .label { font-size: 12px; color: var(--text-light); }
+
+        .profile-form { background: white; border-radius: 20px; padding: 40px; border: 1px solid var(--gray-200); }
+        .profile-form h2 { font-size: 20px; color: var(--dark); margin-bottom: 25px; }
+        .form-group { margin-bottom: 22px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+        .form-group input, .form-group select { width: 100%; padding: 14px 16px; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 15px; font-family: 'Inter', sans-serif; transition: all 0.3s; background: var(--gray-50); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.1); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn { padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(15, 76, 129, 0.3); }
+        .btn-outline { background: white; border: 2px solid var(--gray-200); color: var(--text); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        .section-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 20px; margin-top: 10px; }
+
+        @media (max-width: 1100px) {
+            .profile-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <a href="{{ url_for('index') }}" class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-landmark"></i></div>
+                <div class="logo-text">Amex<span>Ivestment</span></div>
+            </a>
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="{{ url_for('apply') }}" class="nav-item"><i class="fas fa-plus-circle"></i> Apply for Loan</a>
+                <a href="#" class="nav-item"><i class="fas fa-file-alt"></i> Documents</a>
+                <a href="#" class="nav-item"><i class="fas fa-calendar-alt"></i> Payment Schedule</a>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="{{ url_for('profile') }}" class="nav-item active"><i class="fas fa-user"></i> Profile</a>
+                <a href="#" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+                <a href="{{ url_for('logout') }}" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-avatar">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</div>
+                    <div class="user-details">
+                        <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                        <p>{{ current_user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>My Profile</h1>
+                <p>Manage your personal information and account settings.</p>
+            </div>
+
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <div class="profile-avatar">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</div>
+                    <h3>{{ current_user.first_name }} {{ current_user.last_name }}</h3>
+                    <p class="email">{{ current_user.email }}</p>
+                    <div class="profile-stat">
+                        <div>
+                            <div class="number">{{ current_user.loans|length }}</div>
+                            <div class="label">Loans</div>
+                        </div>
+                        <div>
+                            <div class="number">{{ "{:,.0f}".format(current_user.annual_income) }}</div>
+                            <div class="label">Income</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <form method="POST" action="{{ url_for('profile') }}" class="profile-form">
+                        <h2><i class="fas fa-user-edit" style="color: var(--primary); margin-right: 10px;"></i>Personal Information</h2>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" value="{{ current_user.first_name }}" disabled style="opacity: 0.7;">
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" value="{{ current_user.last_name }}" disabled style="opacity: 0.7;">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" value="{{ current_user.email }}" disabled style="opacity: 0.7;">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" name="phone" value="{{ current_user.phone or '' }}" placeholder="(555) 123-4567">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" value="{{ current_user.date_of_birth.strftime('%Y-%m-%d') if current_user.date_of_birth else '' }}" disabled style="opacity: 0.7;">
+                            </div>
+                            <div class="form-group">
+                                <label>SSN (Last 4)</label>
+                                <input type="text" name="ssn_last4" value="{{ current_user.ssn_last4 or '' }}" placeholder="XXXX" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="section-title">Address</div>
+
+                        <div class="form-group">
+                            <label>Street Address</label>
+                            <input type="text" name="address" value="{{ current_user.address or '' }}" placeholder="123 Main Street">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" name="city" value="{{ current_user.city or '' }}" placeholder="New York">
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" name="state" value="{{ current_user.state or '' }}" placeholder="NY" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label>ZIP Code</label>
+                                <input type="text" name="zip_code" value="{{ current_user.zip_code or '' }}" placeholder="10001">
+                            </div>
+                        </div>
+
+                        <div class="section-title">Employment</div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Employment Status</label>
+                                <select name="employment_status">
+                                    <option value="">Select...</option>
+                                    <option {{ 'selected' if current_user.employment_status == 'Full-time' else '' }}>Full-time</option>
+                                    <option {{ 'selected' if current_user.employment_status == 'Part-time' else '' }}>Part-time</option>
+                                    <option {{ 'selected' if current_user.employment_status == 'Self-employed' else '' }}>Self-employed</option>
+                                    <option {{ 'selected' if current_user.employment_status == 'Unemployed' else '' }}>Unemployed</option>
+                                    <option {{ 'selected' if current_user.employment_status == 'Retired' else '' }}>Retired</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Employer Name</label>
+                                <input type="text" name="employer_name" value="{{ current_user.employer_name or '' }}" placeholder="Company Inc.">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

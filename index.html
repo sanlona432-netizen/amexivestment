@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmexIvestment | Trusted American Loans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81; --primary-dark: #0a3560; --primary-light: #1a6bb8;
+            --accent: #00a896; --accent-light: #00d4b8; --gold: #c9a227;
+            --dark: #0a1628; --dark-light: #121f3d; --text: #1e293b;
+            --text-light: #64748b; --white: #ffffff; --gray-50: #f8fafc;
+            --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+        /* Flash Messages */
+        .flash-messages { position: fixed; top: 90px; right: 20px; z-index: 9999; max-width: 400px; }
+        .flash-message {
+            padding: 16px 20px; border-radius: 12px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 12px; font-weight: 500;
+            animation: slideIn 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .flash-success { background: var(--success); color: white; }
+        .flash-error { background: var(--danger); color: white; }
+        .flash-info { background: var(--primary); color: white; }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Navbar */
+        .navbar { position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gray-200); z-index: 1000; padding: 0 5%; transition: all 0.3s ease; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-icon { width: 45px; height: 45px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.3); }
+        .logo-text { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--dark); letter-spacing: -0.5px; }
+        .logo-text span { color: var(--primary); }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 15px; transition: color 0.3s; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary); transition: width 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-buttons { display: flex; gap: 15px; align-items: center; }
+        .user-menu { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; cursor: pointer; }
+        .btn { padding: 12px 28px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(15, 76, 129, 0.3); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(15, 76, 129, 0.4); }
+        .btn-gold { background: linear-gradient(135deg, var(--gold), #e8b923); color: var(--dark); box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3); }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201, 162, 39, 0.4); }
+        .btn-large { padding: 16px 40px; font-size: 16px; }
+        .btn-sm { padding: 8px 18px; font-size: 13px; }
+
+        /* Hero */
+        .hero { min-height: 100vh; background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 50%, var(--primary-dark) 100%); display: flex; align-items: center; padding: 120px 5% 80px; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,168,150,0.15) 0%, transparent 70%); border-radius: 50%; }
+        .hero::after { content: ''; position: absolute; bottom: -30%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(15,76,129,0.2) 0%, transparent 70%); border-radius: 50%; }
+        .hero-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 50px; color: var(--accent-light); font-size: 14px; font-weight: 500; margin-bottom: 30px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 700; color: white; line-height: 1.1; margin-bottom: 25px; letter-spacing: -1px; }
+        .hero h1 .highlight { background: linear-gradient(135deg, var(--accent-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { font-size: 20px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 40px; max-width: 500px; }
+        .hero-stats { display: flex; gap: 40px; margin-top: 50px; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 36px; font-weight: 800; color: var(--accent-light); display: block; }
+        .stat-label { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 5px; }
+
+        /* Calculator Card */
+        .calculator-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .calculator-card h3 { color: white; font-size: 24px; margin-bottom: 30px; text-align: center; }
+        .calc-group { margin-bottom: 25px; }
+        .calc-group label { display: block; color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 10px; font-weight: 500; }
+        .calc-input { width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 16px; font-family: 'Inter', sans-serif; transition: all 0.3s; }
+        .calc-input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.15); }
+        .calc-input::placeholder { color: rgba(255,255,255,0.4); }
+        .range-container { margin-top: 10px; }
+        .range-value { display: flex; justify-content: space-between; color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 8px; }
+        input[type="range"] { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,168,150,0.5); }
+        .calc-result { background: linear-gradient(135deg, rgba(0,168,150,0.2), rgba(201,162,39,0.2)); border: 1px solid rgba(0,168,150,0.3); border-radius: 16px; padding: 25px; margin-top: 30px; text-align: center; }
+        .calc-result-label { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 10px; }
+        .calc-result-value { font-size: 42px; font-weight: 800; color: var(--accent-light); font-family: 'Playfair Display', serif; }
+        .calc-result-note { color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 8px; }
+
+        /* Trust Bar */
+        .trust-bar { background: var(--gray-50); padding: 40px 5%; border-bottom: 1px solid var(--gray-200); }
+        .trust-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 30px; }
+        .trust-item { display: flex; align-items: center; gap: 12px; color: var(--text-light); font-size: 15px; font-weight: 500; }
+        .trust-item i { color: var(--accent); font-size: 20px; }
+
+        /* Features */
+        .features { padding: 100px 5%; background: white; }
+        .section-container { max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 70px; }
+        .section-tag { display: inline-block; background: linear-gradient(135deg, rgba(15,76,129,0.1), rgba(0,168,150,0.1)); color: var(--primary); padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(15,76,129,0.2); }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 700; color: var(--dark); margin-bottom: 20px; letter-spacing: -1px; }
+        .section-header p { font-size: 18px; color: var(--text-light); line-height: 1.7; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 35px; }
+        .feature-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 20px; padding: 40px 35px; transition: all 0.4s ease; position: relative; overflow: hidden; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); transform: scaleX(0); transition: transform 0.4s; }
+        .feature-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(15, 76, 129, 0.25); }
+        .feature-card h3 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 15px; }
+        .feature-card p { color: var(--text-light); line-height: 1.7; font-size: 15px; }
+
+        /* Loan Types */
+        .loan-types { padding: 100px 5%; background: linear-gradient(180deg, var(--gray-50) 0%, white 100%); }
+        .loans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .loan-card { background: white; border: 2px solid var(--gray-200); border-radius: 20px; padding: 35px 30px; text-align: center; transition: all 0.4s ease; cursor: pointer; text-decoration: none; color: inherit; }
+        .loan-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 15px 35px rgba(15, 76, 129, 0.1); }
+        .loan-card .loan-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--gray-100), var(--gray-50)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: var(--primary); transition: all 0.3s; }
+        .loan-card:hover .loan-icon { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; transform: scale(1.1); }
+        .loan-card h3 { font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+        .loan-card .loan-rate { font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .loan-card .loan-rate span { font-size: 16px; font-weight: 500; color: var(--text-light); }
+        .loan-card .loan-detail { color: var(--text-light); font-size: 14px; margin-bottom: 20px; }
+        .loan-card .loan-terms { display: flex; justify-content: center; gap: 20px; font-size: 13px; color: var(--text-light); margin-bottom: 25px; }
+        .loan-card .loan-terms span { display: flex; align-items: center; gap: 5px; }
+        .loan-card .loan-terms i { color: var(--accent); }
+
+        /* How It Works */
+        .how-it-works { padding: 100px 5%; background: var(--dark); position: relative; overflow: hidden; }
+        .how-it-works::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .how-it-works .section-header h2, .how-it-works .section-header p { color: white; }
+        .how-it-works .section-header p { color: rgba(255,255,255,0.7); }
+        .steps-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; position: relative; z-index: 1; }
+        .step-card { text-align: center; position: relative; }
+        .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px; font-size: 24px; font-weight: 800; color: white; box-shadow: 0 8px 25px rgba(0,168,150,0.4); position: relative; }
+        .step-number::after { content: ''; position: absolute; top: 50%; right: -80px; width: 60px; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+        .step-card:last-child .step-number::after { display: none; }
+        .step-card h3 { color: white; font-size: 20px; font-weight: 700; margin-bottom: 15px; }
+        .step-card p { color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.7; }
+
+        /* Testimonials */
+        .testimonials { padding: 100px 5%; background: white; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .testimonial-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 20px; padding: 35px; position: relative; }
+        .testimonial-card::before { content: '"'; position: absolute; top: 20px; right: 30px; font-family: 'Playfair Display', serif; font-size: 80px; color: var(--primary); opacity: 0.1; line-height: 1; }
+        .stars { color: var(--gold); font-size: 16px; margin-bottom: 20px; }
+        .testimonial-text { font-size: 16px; color: var(--text); line-height: 1.8; margin-bottom: 25px; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 15px; }
+        .author-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 18px; }
+        .author-info h4 { font-size: 16px; font-weight: 700; color: var(--dark); }
+        .author-info p { font-size: 14px; color: var(--text-light); }
+
+        /* Security */
+        .security { padding: 80px 5%; background: linear-gradient(135deg, var(--gray-50), white); }
+        .security-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; text-align: center; }
+        .security-item { padding: 20px; }
+        .security-item i { font-size: 40px; color: var(--primary); margin-bottom: 15px; display: block; }
+        .security-item h4 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+        .security-item p { font-size: 14px; color: var(--text-light); }
+
+        /* CTA */
+        .cta { padding: 100px 5%; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); text-align: center; position: relative; overflow: hidden; }
+        .cta::before { content: ''; position: absolute; top: -50%; left: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,168,150,0.2) 0%, transparent 70%); border-radius: 50%; }
+        .cta h2 { font-family: 'Playfair Display', serif; font-size: 48px; color: white; margin-bottom: 20px; position: relative; z-index: 1; }
+        .cta p { font-size: 20px; color: rgba(255,255,255,0.8); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+
+        /* Footer */
+        .footer { background: var(--dark); padding: 80px 5% 30px; color: white; }
+        .footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+        .footer-brand .logo-text { color: white; margin-bottom: 20px; }
+        .footer-brand p { color: rgba(255,255,255,0.6); line-height: 1.8; font-size: 15px; margin-bottom: 25px; }
+        .social-links { display: flex; gap: 15px; }
+        .social-links a { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s; }
+        .social-links a:hover { background: var(--accent); transform: translateY(-3px); }
+        .footer-column h4 { font-size: 18px; font-weight: 700; margin-bottom: 25px; color: white; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 12px; }
+        .footer-column ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 15px; transition: color 0.3s; }
+        .footer-column ul li a:hover { color: var(--accent-light); }
+        .footer-bottom { max-width: 1400px; margin: 0 auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.5); font-size: 14px; }
+        .footer-bottom a { color: rgba(255,255,255,0.5); text-decoration: none; margin-left: 30px; transition: color 0.3s; }
+        .footer-bottom a:hover { color: var(--accent-light); }
+
+        /* Contact Section */
+        .contact-section { padding: 100px 5%; background: var(--gray-50); }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 1200px; margin: 0 auto; }
+        .contact-info h3 { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--dark); margin-bottom: 20px; }
+        .contact-info p { color: var(--text-light); line-height: 1.8; margin-bottom: 30px; }
+        .contact-detail { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; color: var(--text); }
+        .contact-detail i { width: 45px; height: 45px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        .contact-form { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+        .contact-form h3 { font-size: 24px; color: var(--dark); margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 14px 16px; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 15px; font-family: 'Inter', sans-serif; transition: all 0.3s; background: var(--gray-50); }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(15, 76, 129, 0.1); }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* Mobile */
+        .mobile-toggle { display: none; background: none; border: none; font-size: 24px; color: var(--dark); cursor: pointer; }
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; gap: 50px; }
+            .hero h1 { font-size: 48px; }
+            .features-grid, .loans-grid, .steps-container, .testimonials-grid, .contact-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .nav-links, .nav-buttons { display: none; }
+            .mobile-toggle { display: block; }
+            .hero h1 { font-size: 36px; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .features-grid, .loans-grid, .steps-container, .testimonials-grid, .security-grid, .contact-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <!-- Google reCAPTCHA v2 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'error' else 'info-circle' }}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <div class="logo-icon"><i class="fas fa-landmark"></i></div>
+                <div class="logo-text">Amex<span>Ivestment</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#loans">Loan Types</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-buttons">
+                {% if current_user.is_authenticated %}
+                <div class="user-menu">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-sm"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    <div class="user-avatar">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-outline"><i class="fas fa-user"></i> Sign In</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> Get Started</a>
+                {% endif %}
+            </div>
+            <button class="mobile-toggle" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-shield-alt"></i> FDIC Insured & NMLS Licensed</div>
+                <h1>Smart Loans for<br><span class="highlight">Smart Americans</span></h1>
+                <p>Get approved in minutes, not days. AmexIvestment offers competitive rates, zero hidden fees, and a seamless digital experience trusted by 50,000+ borrowers.</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('apply') }}" class="btn btn-primary btn-large"><i class="fas fa-calculator"></i> Apply for a Loan</a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline btn-large" style="border-color: rgba(255,255,255,0.3); color: white;"><i class="fas fa-chart-line"></i> My Dashboard</a>
+                    {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-large"><i class="fas fa-calculator"></i> Apply Now — It's Free</a>
+                    <button class="btn btn-outline btn-large" style="border-color: rgba(255,255,255,0.3); color: white;" onclick="document.getElementById('loans').scrollIntoView({behavior:'smooth'})"><i class="fas fa-play-circle"></i> View Rates</button>
+                    {% endif %}
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item"><span class="stat-number">$2.4B+</span><span class="stat-label">Loans Funded</span></div>
+                    <div class="stat-item"><span class="stat-number">50K+</span><span class="stat-label">Happy Clients</span></div>
+                    <div class="stat-item"><span class="stat-number">4.9★</span><span class="stat-label">TrustScore</span></div>
+                </div>
+            </div>
+            <div class="hero-calculator">
+                <div class="calculator-card">
+                    <h3><i class="fas fa-calculator" style="margin-right: 10px; color: var(--accent-light);"></i>Loan Calculator</h3>
+                    <div class="calc-group">
+                        <label>Loan Amount</label>
+                        <input type="text" class="calc-input" id="loanAmount" value="$25,000" onchange="calculateLoan()">
+                        <div class="range-container">
+                            <div class="range-value"><span>$1,000</span><span id="amountDisplay">$25,000</span><span>$100,000</span></div>
+                            <input type="range" id="amountRange" min="1000" max="100000" value="25000" step="1000" oninput="updateAmount(this.value)">
+                        </div>
+                    </div>
+                    <div class="calc-group">
+                        <label>Loan Term</label>
+                        <select class="calc-input" id="loanTerm" onchange="calculateLoan()">
+                            <option value="12">12 Months</option><option value="24">24 Months</option>
+                            <option value="36" selected>36 Months</option><option value="48">48 Months</option>
+                            <option value="60">60 Months</option><option value="72">72 Months</option>
+                        </select>
+                    </div>
+                    <div class="calc-group">
+                        <label>Credit Score</label>
+                        <select class="calc-input" id="creditScore" onchange="calculateLoan()">
+                            <option value="excellent">Excellent (750+)</option>
+                            <option value="good" selected>Good (670-749)</option>
+                            <option value="fair">Fair (580-669)</option>
+                            <option value="building">Building (below 580)</option>
+                        </select>
+                    </div>
+                    <div class="calc-result">
+                        <div class="calc-result-label">Estimated Monthly Payment</div>
+                        <div class="calc-result-value" id="monthlyPayment">$772</div>
+                        <div class="calc-result-note">APR from <span id="aprDisplay">6.99%</span> • No origination fee</div>
+                    </div>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('apply') }}" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 16px; text-align: center; justify-content: center;"><i class="fas fa-check-circle"></i> Apply Now</a>
+                    {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary" style="width: 100%; margin-top: 20px; padding: 16px; text-align: center; justify-content: center;"><i class="fas fa-check-circle"></i> Check My Rate</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+        <div class="trust-container">
+            <div class="trust-item"><i class="fas fa-shield-alt"></i><span>256-bit SSL Encryption</span></div>
+            <div class="trust-item"><i class="fas fa-check-circle"></i><span>No Impact on Credit Score</span></div>
+            <div class="trust-item"><i class="fas fa-clock"></i><span>Approval in 2 Minutes</span></div>
+            <div class="trust-item"><i class="fas fa-hand-holding-usd"></i><span>Funds Next Business Day</span></div>
+            <div class="trust-item"><i class="fas fa-award"></i><span>A+ BBB Rating</span></div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag">Why AmexIvestment</div>
+                <h2>Borrowing Made Simple</h2>
+                <p>We've eliminated the paperwork, the waiting, and the guesswork. Get a modern lending experience designed for real people.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Instant Pre-Approval</h3>
+                    <p>Get pre-approved in under 2 minutes with our smart algorithm. No hard credit pull required to check your rate.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-percentage"></i></div>
+                    <h3>Low Fixed Rates</h3>
+                    <p>APR starting at 4.99% for qualified borrowers. Your rate never changes — predictable payments every month.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-file-signature"></i></div>
+                    <h3>Zero Hidden Fees</h3>
+                    <p>No origination fees, no prepayment penalties, no late fees. What you see is exactly what you pay.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile First</h3>
+                    <p>Apply, sign, and manage your loan entirely from your phone. Digital signatures accepted in all 50 states.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+                    <h3>Bank-Level Security</h3>
+                    <p>256-bit AES encryption, SOC 2 Type II certified, and strict privacy protocols protect your data 24/7.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Real humans available around the clock. Call, text, or chat — we're here when you need us.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loan Types -->
+    <section class="loan-types" id="loans">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag">Our Products</div>
+                <h2>Loans for Every Need</h2>
+                <p>From consolidating debt to funding your dreams, we have a loan designed specifically for your situation.</p>
+            </div>
+            <div class="loans-grid">
+                <a href="{{ url_for('apply') if current_user.is_authenticated else url_for('register') }}" class="loan-card fade-in">
+                    <div class="loan-icon"><i class="fas fa-user"></i></div>
+                    <h3>Personal Loan</h3>
+                    <div class="loan-rate">4.99%<span> APR</span></div>
+                    <div class="loan-detail">$1,000 – $100,000</div>
+                    <div class="loan-terms"><span><i class="fas fa-calendar"></i> 12-84 mo</span><span><i class="fas fa-check"></i> No collateral</span></div>
+                    <span class="btn btn-outline" style="width: 100%;">Apply Now</span>
+                </a>
+                <a href="{{ url_for('apply') if current_user.is_authenticated else url_for('register') }}" class="loan-card fade-in">
+                    <div class="loan-icon"><i class="fas fa-car"></i></div>
+                    <h3>Auto Loan</h3>
+                    <div class="loan-rate">3.49%<span> APR</span></div>
+                    <div class="loan-detail">$5,000 – $150,000</div>
+                    <div class="loan-terms"><span><i class="fas fa-calendar"></i> 24-84 mo</span><span><i class="fas fa-check"></i> New & used</span></div>
+                    <span class="btn btn-outline" style="width: 100%;">Apply Now</span>
+                </a>
+                <a href="{{ url_for('apply') if current_user.is_authenticated else url_for('register') }}" class="loan-card fade-in">
+                    <div class="loan-icon"><i class="fas fa-home"></i></div>
+                    <h3>Home Equity</h3>
+                    <div class="loan-rate">5.99%<span> APR</span></div>
+                    <div class="loan-detail">$25,000 – $500,000</div>
+                    <div class="loan-terms"><span><i class="fas fa-calendar"></i> 5-30 yr</span><span><i class="fas fa-check"></i> Tax benefits</span></div>
+                    <span class="btn btn-outline" style="width: 100%;">Apply Now</span>
+                </a>
+                <a href="{{ url_for('apply') if current_user.is_authenticated else url_for('register') }}" class="loan-card fade-in">
+                    <div class="loan-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3>Student Refi</h3>
+                    <div class="loan-rate">4.24%<span> APR</span></div>
+                    <div class="loan-detail">$5,000 – $300,000</div>
+                    <div class="loan-terms"><span><i class="fas fa-calendar"></i> 5-20 yr</span><span><i class="fas fa-check"></i> No fees</span></div>
+                    <span class="btn btn-outline" style="width: 100%;">Apply Now</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag" style="background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.2);">Simple Process</div>
+                <h2>How It Works</h2>
+                <p>Four simple steps from application to funding. No paperwork, no branch visits, no stress.</p>
+            </div>
+            <div class="steps-container">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Check Your Rate</h3>
+                    <p>Tell us a little about yourself and see your personalized rate in 2 minutes. Soft pull only — won't hurt your credit.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Choose Your Loan</h3>
+                    <p>Select the amount, term, and monthly payment that fits your budget. Full transparency — no surprises.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Verify Identity</h3>
+                    <p>Upload your ID and proof of income securely. Our AI verifies documents in seconds, not hours.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <h3>Get Funded</h3>
+                    <p>E-sign your agreement and receive funds as soon as the next business day directly to your bank account.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag">Testimonials</div>
+                <h2>Trusted by Thousands</h2>
+                <p>Real stories from real Americans who achieved their financial goals with AmexIvestment.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"I consolidated $35,000 in credit card debt and saved over $400/month. The process was unbelievably smooth — approved on Sunday night, money in my account Tuesday morning."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JM</div>
+                        <div class="author-info"><h4>James Mitchell</h4><p>Personal Loan • Austin, TX</p></div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"As a small business owner, I needed quick capital for inventory. AmexIvestment gave me $50K in 48 hours with a rate half what my bank offered. Truly a game changer."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SR</div>
+                        <div class="author-info"><h4>Sarah Rodriguez</h4><p>Business Loan • Miami, FL</p></div>
+                    </div>
+                </div>
+                <div class="testimonial-card fade-in">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p class="testimonial-text">"Refinanced my student loans from 8.5% down to 4.2%. I'm saving $12,000 over the life of the loan. The online dashboard makes it easy to track everything."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">DK</div>
+                        <div class="author-info"><h4>David Kim</h4><p>Student Refi • Seattle, WA</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security -->
+    <section class="security">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag">Security</div>
+                <h2>Your Data is Protected</h2>
+                <p>We use the same security standards as major banks to keep your information safe.</p>
+            </div>
+            <div class="security-grid fade-in">
+                <div class="security-item"><i class="fas fa-lock"></i><h4>256-Bit Encryption</h4><p>Military-grade data protection</p></div>
+                <div class="security-item"><i class="fas fa-certificate"></i><h4>SOC 2 Certified</h4><p>Audited security controls</p></div>
+                <div class="security-item"><i class="fas fa-fingerprint"></i><h4>Biometric Auth</h4><p>Face & fingerprint login</p></div>
+                <div class="security-item"><i class="fas fa-shield-alt"></i><h4>Fraud Monitoring</h4><p>24/7 AI-powered detection</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-header fade-in" style="margin-bottom: 50px;">
+            <div class="section-tag">Contact Us</div>
+            <h2>Get In Touch</h2>
+            <p>Have questions? Our team is here to help you every step of the way.</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h3>We're Here to Help</h3>
+                <p>Whether you have questions about rates, need help with your application, or just want to learn more about AmexIvestment, our team is ready to assist you.</p>
+                <div class="contact-detail"><i class="fas fa-phone"></i><div><strong>Phone</strong><br>(800) 555-LOAN</div></div>
+                <div class="contact-detail"><i class="fas fa-envelope"></i><div><strong>Email</strong><br>support@amexivestment.com</div></div>
+                <div class="contact-detail"><i class="fas fa-map-marker-alt"></i><div><strong>Address</strong><br>100 Financial Center, New York, NY 10005</div></div>
+                <div class="contact-detail"><i class="fas fa-clock"></i><div><strong>Hours</strong><br>24/7 Customer Support</div></div>
+            </div>
+            <div class="contact-form">
+                <h3>Send a Message</h3>
+                <form action="{{ url_for('contact') }}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group"><label>First Name</label><input type="text" name="name" placeholder="John" required></div>
+                        <div class="form-group"><label>Last Name</label><input type="text" name="last_name" placeholder="Doe" required></div>
+                    </div>
+                    <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="john@example.com" required></div>
+                    <div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="(555) 123-4567"></div>
+                    <div class="form-group"><label>Subject</label><input type="text" name="subject" placeholder="How can we help?"></div>
+                    <div class="form-group"><label>Message</label><textarea name="message" placeholder="Tell us what you need..." required></textarea></div>
+                    <div style="margin-bottom: 15px;">
+                        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px;"><i class="fas fa-paper-plane"></i> Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Ready to Get Started?</h2>
+        <p>Join 50,000+ Americans who chose AmexIvestment. Check your rate in 2 minutes with no impact on your credit score.</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('apply') }}" class="btn btn-gold btn-large"><i class="fas fa-rocket"></i> Apply for a Loan</a>
+        {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-gold btn-large"><i class="fas fa-rocket"></i> Check My Rate Now</a>
+        {% endif %}
+        <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;"><i class="fas fa-check-circle" style="margin-right: 5px;"></i>No credit impact • No fees • Instant decision</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-text" style="display: flex; align-items: center; gap: 12px;">
+                    <div class="logo-icon" style="width: 40px; height: 40px; font-size: 16px;"><i class="fas fa-landmark"></i></div>
+                    Amex<span>Ivestment</span>
+                </div>
+                <p>AmexIvestment is a licensed lender operating in all 50 states. NMLS ID #1234567. We believe everyone deserves access to fair, transparent, and affordable credit.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Products</h4>
+                <ul>
+                    <li><a href="#">Personal Loans</a></li>
+                    <li><a href="#">Auto Loans</a></li>
+                    <li><a href="#">Home Equity</a></li>
+                    <li><a href="#">Student Refinance</a></li>
+                    <li><a href="#">Debt Consolidation</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Partner Program</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 AmexIvestment Financial, Inc. All rights reserved.</div>
+            <div><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a><a href="#">Licenses</a></div>
+        </div>
+    </footer>
+
+    <script>
+        // Loan Calculator
+        function updateAmount(val) {
+            document.getElementById('loanAmount').value = '$' + parseInt(val).toLocaleString();
+            document.getElementById('amountDisplay').textContent = '$' + parseInt(val).toLocaleString();
+            calculateLoan();
+        }
+
+        function calculateLoan() {
+            let amount = parseInt(document.getElementById('loanAmount').value.replace(/[^0-9]/g, '')) || 25000;
+            let term = parseInt(document.getElementById('loanTerm').value);
+            let creditTier = document.getElementById('creditScore').value;
+            let rates = {'excellent': 0.0499, 'good': 0.0699, 'fair': 0.0999, 'building': 0.1499};
+            let rate = rates[creditTier] || 0.0699;
+            let monthlyRate = rate / 12;
+            let payment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -term));
+            document.getElementById('monthlyPayment').textContent = '$' + Math.round(payment).toLocaleString();
+            document.getElementById('aprDisplay').textContent = (rate * 100).toFixed(2) + '%';
+        }
+
+        // Scroll Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Navbar scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.style.boxShadow = window.scrollY > 50 ? '0 4px 20px rgba(0,0,0,0.08)' : 'none';
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Flash messages auto-dismiss
+        setTimeout(() => {
+            document.querySelectorAll('.flash-message').forEach(msg => msg.style.opacity = '0');
+        }, 5000);
+
+        calculateLoan();
+    </script>
+</body>
+</html>
